@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:gfe-data="http://www.springframework.org/schema/data/gemfire"
+	xmlns:gfe="http://www.springframework.org/schema/gemfire"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/data/gemfire http://www.springframework.org/schema/data/gemfire/spring-data-gemfire.xsd
+		http://www.springframework.org/schema/gemfire http://www.springframework.org/schema/gemfire/spring-gemfire.xsd">
+
+	<bean id="pdxSerializer" class="com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer">
+		<constructor-arg value="io.pivotal.cf.demo.entity.*"/>
+	</bean>
+	
+	 <gfe:disk-store id="diskStore1" queue-size="50" auto-compact="true" max-oplog-size="10" time-interval="9999">
+        <gfe:disk-dir location="/gemfire/store1/" max-size="20"/>
+        <gfe:disk-dir location="/gemfire/store2/" max-size="20"/>
+	</gfe:disk-store>
+
+	<gfe:cache  id="gemfireCache" pdx-serializer-ref="pdxSerializer" eviction-heap-percentage="80"  critical-heap-percentage="85"/>
+
+	<!-- configure the cache and set the port to 0 for it picks the first available port -->
+	<gfe:cache-server port="0" cache-ref="gemfireCache" />
+
+	<gfe:replicated-region id="attendee" disk-store-ref="diskStore1"/>
+	
+
+</beans>

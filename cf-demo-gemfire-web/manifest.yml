@@ -1,0 +1,9 @@
+---
+applications:
+- name: cf-gemfire-app
+  memory: 1G
+  host: cf-gemfire-app
+  instances: 1
+  path: target/cf-demo-gemfire-0.0.1-SNAPSHOT.jar
+  services:
+  - attendee-repo
